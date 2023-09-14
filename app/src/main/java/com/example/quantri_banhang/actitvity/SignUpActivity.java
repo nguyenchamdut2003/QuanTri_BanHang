@@ -1,18 +1,31 @@
 package com.example.quantri_banhang.actitvity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.quantri_banhang.MainActivity;
 import com.example.quantri_banhang.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SignUpActivity extends AppCompatActivity {
+
+
+    String TAG = "zzzz";
+    private ProgressDialog progressDialog;
     private EditText edemail;
     private EditText edpasswd;
     private EditText edrepasswd;
@@ -25,6 +38,8 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        progressDialog = new ProgressDialog(this);
 
         edemail = findViewById(R.id.signup_email);
         edpasswd = findViewById(R.id.signup_password);
@@ -46,9 +61,42 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 validate();
+                if (temp==0){
+                    clickSignUp();
+                }else{
+                    temp=0;
+                }
+
             }
         });
     }
+
+    private void clickSignUp() {
+        String email = edemail.getText().toString().trim();
+        String pass = edpasswd.getText().toString().trim();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        progressDialog.show();
+        auth.createUserWithEmailAndPassword(email, pass)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressDialog.dismiss();
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            Toast.makeText(SignUpActivity.this, "Authentication success.", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        } else {
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(SignUpActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
     void validate(){
         String pass = edpasswd.getText().toString();
         String repass = edrepasswd.getText().toString();
