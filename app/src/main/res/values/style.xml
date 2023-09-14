@@ -4,4 +4,8 @@
         <item name="boxStrokeColor">#E80909</item>
         <item name="boxStrokeWidth">2dp</item>
     </style>
+
+    <style name="appCompatButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>
