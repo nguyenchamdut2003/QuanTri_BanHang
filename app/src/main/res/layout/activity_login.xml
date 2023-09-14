@@ -39,6 +39,7 @@
         >
 
         <com.google.android.material.textfield.TextInputEditText
+            android:maxLength="50"
             android:textColor="#ffffff"
             android:id="@+id/login_email"
             android:layout_width="match_parent"
@@ -70,6 +71,7 @@
         >
 
         <com.google.android.material.textfield.TextInputEditText
+            android:maxLength="50"
             android:textColor="#ffffff"
             android:inputType="textPassword"
             android:id="@+id/login_password"

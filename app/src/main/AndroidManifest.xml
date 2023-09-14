@@ -15,15 +15,7 @@
         android:theme="@style/Theme.QuanTri_BanHang"
         tools:targetApi="31">
         <activity
-            android:name=".actitvity.QLySanPhamActivity"
-            android:exported="true" >
-
-        </activity>
-        <activity
-            android:name=".actitvity.SignUpActivity"
-            android:exported="false" />
-        <activity
-            android:name=".actitvity.LoginActivity"
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,8 +24,16 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".actitvity.SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".actitvity.LoginActivity"
+            android:exported="false">
+
+        </activity>
+        <activity
             android:name=".MainActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
     </application>
 
 </manifest>
