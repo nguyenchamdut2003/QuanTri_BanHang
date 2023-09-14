@@ -26,6 +26,7 @@ public class fragment_taikhoan extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View viewok = inflater.inflate(R.layout.fragment_taikhoan, container, false);
+
         return viewok;
     }
 
