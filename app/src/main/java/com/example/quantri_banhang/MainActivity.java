@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import com.example.quantri_banhang.fragment.fragment_trangchu;
 import com.example.quantri_banhang.fragment.fragment_taikhoan;
+import com.example.quantri_banhang.fragment.fragment_loai;
+
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -40,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(fragment_trangchu.newInstance());
                 }else if (id == R.id.nav_taikhoan){
                     replaceFragment(fragment_taikhoan.newInstance());
+                }else if (id == R.id.nav_loai){
+                    replaceFragment(fragment_loai.newInstance());
                 }
                 return true;
             }
