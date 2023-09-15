@@ -106,6 +106,8 @@ public class LoginActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
 
+                            Toast.makeText(LoginActivity.this, "Authentication success.", Toast.LENGTH_SHORT).show();
+
                             FirebaseUser user = auth.getCurrentUser();
 //                            Log.e(TAG, "onComplete: " + user.getEmail());
                             Log.e(TAG, "onComplete: " + user.getUid() );
@@ -120,16 +122,16 @@ public class LoginActivity extends AppCompatActivity {
                             DatabaseReference myRefPassword = database.getReference("Users/"+user.getUid()+"/password");
                             myRefPassword.setValue(password);
 
-                            DatabaseReference myRefFullname = database.getReference("Users/"+user.getUid()+"/fullname");
-                            myRefFullname.setValue("");
+//                            DatabaseReference myRefFullname = database.getReference("Users/"+user.getUid()+"/fullname");
+//                            myRefFullname.setValue("");
 
-                            DatabaseReference myRefPhone = database.getReference("Users/"+user.getUid()+"/phone");
-                            myRefPhone.setValue("");
+//                            DatabaseReference myRefPhone = database.getReference("Users/"+user.getUid()+"/phone");
+//                            myRefPhone.setValue("");
 
                             DatabaseReference myRefRole = database.getReference("Users/"+user.getUid()+"/role");
                             myRefRole.setValue("Admin");
 
-                            Toast.makeText(LoginActivity.this, "Authentication success.", Toast.LENGTH_SHORT).show();
+
                             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                             startActivity(intent);
                             finishAffinity();
