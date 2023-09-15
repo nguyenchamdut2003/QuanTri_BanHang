@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
@@ -29,6 +31,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.quantri_banhang.Adapter.Adapter_QlySanPham;
 import com.example.quantri_banhang.DTO.CategoryDTO;
 import com.example.quantri_banhang.DTO.DTO_QlySanPham;
 import com.example.quantri_banhang.R;
@@ -51,10 +54,14 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class QLySanPhamActivity extends AppCompatActivity {
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
+    private Adapter_QlySanPham madapter_qlySanPham;
+    private List<DTO_QlySanPham> mlist;
+
 
     private ArrayAdapter<String> adapter;
 
@@ -81,6 +88,7 @@ public class QLySanPhamActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance("gs://duanbanhangthuctap-94f71.appspot.com");
         storageReference = storage.getReference();
         initView();
+        getSanpham();
         listSpin = new ArrayList<>();
         adapter = new ArrayAdapter<>(this, R.layout.item_spinner_add, listSpin);
         getDataCat();
@@ -122,6 +130,8 @@ public class QLySanPhamActivity extends AppCompatActivity {
         TextView btn_huy = dialog.findViewById(R.id.btn_huy);
         img_preview = dialog.findViewById(R.id.img_pro_add);
         Spinner spn_cat = dialog.findViewById(R.id.spn_cat);
+
+
 
 
 
@@ -198,7 +208,40 @@ public class QLySanPhamActivity extends AppCompatActivity {
         fab_pro = findViewById(R.id.fab_addPro);
         btn_back = findViewById(R.id.img_back);
         img_preview = findViewById(R.id.img_pro_add);
+
+        recyclerView= findViewById(R.id.rcv_pro);
+        LinearLayoutManager layoutManager= new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration= new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        mlist= new ArrayList<>();
+        madapter_qlySanPham = new Adapter_QlySanPham(mlist,getApplicationContext());
+        recyclerView.setAdapter(madapter_qlySanPham);
     }
+
+    private void getSanpham(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Products");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot snapshot2 :
+                        snapshot.getChildren()) {
+
+                    DTO_QlySanPham dto_qlySanPham = snapshot2.getValue(DTO_QlySanPham.class);
+                    mlist.add(dto_qlySanPham);
+                }
+
+                madapter_qlySanPham.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(QLySanPhamActivity.this, "lay san pham loi ", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void getDataCat() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("category");
