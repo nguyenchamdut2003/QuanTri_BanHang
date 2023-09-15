@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this,options);
 
-
+        String abc;
         findViewById(R.id.tv_newAcoutnt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
