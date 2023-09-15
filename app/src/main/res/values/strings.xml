@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">QuanTri_BanHang</string>
+    <string name="huy"><u>Hủy</u></string>
 </resources>
