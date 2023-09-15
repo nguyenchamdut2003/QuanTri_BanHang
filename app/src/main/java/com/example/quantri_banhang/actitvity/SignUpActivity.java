@@ -45,9 +45,9 @@ public class SignUpActivity extends AppCompatActivity {
         edpasswd = findViewById(R.id.signup_password);
         edrepasswd = findViewById(R.id.signup_repass);
 
-        tilemail = findViewById(R.id.til_email_signup);
-        tilpass = findViewById(R.id.til_password_signup);
-        tilrepass = findViewById(R.id.til_repass_signup);
+        tilemail = findViewById(R.id.til_name_ad);
+        tilpass = findViewById(R.id.til_price_add);
+        tilrepass = findViewById(R.id.til_des_add);
 
         findViewById(R.id.tv_login).setOnClickListener(new View.OnClickListener() {
             @Override

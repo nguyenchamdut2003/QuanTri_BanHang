@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
-        android:id="@+id/textSignUp"
+        android:id="@+id/tv_title"
         android:layout_marginTop="60dp"
         android:textColor="#ffffff"
         android:text="Sign Up"
@@ -21,7 +21,7 @@
         />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_email_signup"
+        android:id="@+id/til_name_ad"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -30,7 +30,7 @@
         android:paddingRight="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textSignUp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title"
         app:boxStrokeWidth="2dp"
         app:boxStrokeColor = "@color/white"
         app:startIconDrawable="@drawable/baseline_email_24"
@@ -50,7 +50,7 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_repass_signup"
+        android:id="@+id/til_des_add"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -59,7 +59,7 @@
         android:paddingRight="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_password_signup"
+        app:layout_constraintTop_toBottomOf="@+id/til_price_add"
         app:boxStrokeWidth="2dp"
         app:boxStrokeColor = "@color/white"
         app:startIconDrawable="@drawable/baseline_vpn_key_24"
@@ -81,7 +81,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_password_signup"
+        android:id="@+id/til_price_add"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -90,7 +90,7 @@
         android:paddingRight="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_email_signup"
+        app:layout_constraintTop_toBottomOf="@+id/til_name_ad"
         app:boxStrokeWidth="2dp"
         app:boxStrokeColor = "@color/white"
         app:startIconDrawable="@drawable/baseline_vpn_key_24"
@@ -116,7 +116,7 @@
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_repass_signup"
+        app:layout_constraintTop_toBottomOf="@+id/til_des_add"
         android:layout_margin="20dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
