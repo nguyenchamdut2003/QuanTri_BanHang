@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">QuanTri_BanHang</string>
     <string name="huy"><u>Hủy</u></string>
+    <string name="xinchaoshop"> <u>Xin Chào: </u></string>
+    <string name="xemchitiet"> <u>Xem chi tiết </u></string>
 </resources>
