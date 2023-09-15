@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1054913907114",
+    "firebase_url": "https://duanbanhangthuctap-94f71-default-rtdb.firebaseio.com",
     "project_id": "duanbanhangthuctap-94f71",
     "storage_bucket": "duanbanhangthuctap-94f71.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.quantri_banhang"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1054913907114-804ms25f8plopadv7jcg6vhtremers2s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quantri_banhang",
+            "certificate_hash": "2fa1efbe4899497887d788acebb8353dc41384f0"
+          }
+        },
+        {
+          "client_id": "1054913907114-g2qdpjbl6c6ughprmmvrqs9cdlf1gcij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCbGBd5qCGdCFEyj0mzzfeWDOPcOToxpnk"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1054913907114-0vvasdp32bepq0tp6sc25l8b4gtu5sfq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

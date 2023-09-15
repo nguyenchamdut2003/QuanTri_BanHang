@@ -168,17 +168,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
+            android:id="@+id/img_gg"
             android:layout_weight="1"
             android:layout_gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/gg"/>
         <ImageView
+            android:id="@+id/img_fb"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/fb"/>
         <ImageView
+            android:id="@+id/img_tt"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
