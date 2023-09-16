@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -22,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -59,7 +61,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class QLySanPhamActivity extends AppCompatActivity {
+public class QLySanPhamActivity extends AppCompatActivity implements Adapter_QlySanPham.updateSanPham{
 
     String abc;
     private SearchView sv_search;
@@ -123,7 +125,7 @@ public class QLySanPhamActivity extends AppCompatActivity {
         dividerItemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
         mlist= new ArrayList<>();
-        madapter_qlySanPham = new Adapter_QlySanPham(mlist,getApplicationContext());
+        madapter_qlySanPham = new Adapter_QlySanPham(mlist,getApplicationContext(),this);
         recyclerView.setAdapter(madapter_qlySanPham);
 
         adapter1 = new ArrayAdapter<>(this,R.layout.item_spinner_add,listSpin1);
@@ -452,6 +454,131 @@ public class QLySanPhamActivity extends AppCompatActivity {
 
     }
     private void uploadImage() {
+
+    }
+
+    @Override
+    public void update1(DTO_QlySanPham dto_qlySanPham) {
+        // Xử lý khi người dùng chọn action_popup_edit
+
+
+        final Dialog dialog = new Dialog(QLySanPhamActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_update_pro);
+
+        Window window = dialog.getWindow();
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT);
+        if (dialog != null && dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        }
+        EditText ed_name = dialog.findViewById(R.id.ed_name_update);
+        EditText ed_des = dialog.findViewById(R.id.ed_des_update);
+        EditText ed_price = dialog.findViewById(R.id.ed_price_update);
+        EditText ed_number = dialog.findViewById(R.id.ed_number_update);
+        img_preview = dialog.findViewById(R.id.img_pro_update);
+
+        TextView btn_update = dialog.findViewById(R.id.dialog_btn_update);
+        TextView btn_huy = dialog.findViewById(R.id.btn_huy);
+        Spinner spn_cat = dialog.findViewById(R.id.spn_cat);
+        spn_cat.setAdapter(adapter);
+        spn_cat.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                nameCat = listSpin.get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        img_preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SelectImage();
+
+            }
+        });
+
+
+        btn_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("Products");
+                String namePro = ed_name.getText().toString().trim();
+
+                String des = ed_des.getText().toString().toString();
+                String price = ed_price.getText().toString().trim();
+
+                String id = dto_qlySanPham.getId();
+                if (namePro.isEmpty()){
+                    ed_name.setError("Không được để trống!!");
+                }else if (des.isEmpty()){
+                    ed_des.setError("Không được để trống!!");
+                } else if (price.isEmpty()) {
+                    ed_price.setError("Không được để trống!!");
+                } else if (ed_number.getText().toString().isEmpty()) {
+                    ed_number.setError("Không được để trống!!");
+                } else if (!ed_price.getText().toString().matches("\\d+(?:\\.\\d+)?")) {
+                    ed_price.setError("Giá tiền phải là số!!");
+                } else if (!ed_number.getText().toString().matches("\\d+(?:\\.\\d+)?")) {
+                    ed_number.setError("Số lượng phải là số!!");
+                }else{
+                    int number = Integer.parseInt(ed_number.getText().toString().trim());
+                    DTO_QlySanPham sanPham = new DTO_QlySanPham(id,link_anh,namePro,price,des,nameCat,number);
+
+                    myRef.child(id).setValue(sanPham, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                            Toast.makeText(QLySanPhamActivity.this, "update thanh cong", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    dialog.dismiss();
+                }
+
+            }
+        });
+
+        btn_huy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+    }
+
+    @Override
+    public void delete1(DTO_QlySanPham dto_qlySanPham) {
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.app_name))
+                .setMessage("Bạn có chắc muốn xóa hay không?")
+
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference myRef1 = database.getReference("Products");
+                        myRef1.child(String.valueOf(dto_qlySanPham.getId())).removeValue(new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                Toast.makeText(QLySanPhamActivity.this, "xoa thanh cong", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
+                    }
+
+                })
+
+                .setNegativeButton("Cancel",null)
+                .show();
+
+
 
     }
 }

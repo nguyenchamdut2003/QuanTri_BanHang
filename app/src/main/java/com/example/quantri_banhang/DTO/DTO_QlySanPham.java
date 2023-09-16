@@ -1,5 +1,8 @@
 package com.example.quantri_banhang.DTO;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DTO_QlySanPham {
     String image,name,price,description,category,id;
 
@@ -73,4 +76,17 @@ public class DTO_QlySanPham {
     public void setNumber(int number) {
         this.number = number;
     }
+
+    public Map<String, Object> toMap(){
+        HashMap<String,Object> result = new HashMap<>();
+        result.put("image",image);
+        result.put("name",name);
+        result.put("price",price);
+        result.put("description",description);
+        result.put("category",category);
+        result.put("number",number);
+
+return result;
+    }
+
 }
