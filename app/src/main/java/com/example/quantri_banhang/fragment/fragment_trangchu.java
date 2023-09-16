@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.example.quantri_banhang.R;
 import com.example.quantri_banhang.actitvity.LoginActivity;
 import com.example.quantri_banhang.actitvity.QLySanPhamActivity;
+import com.example.quantri_banhang.actitvity.QLyUserActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -40,6 +41,8 @@ public class fragment_trangchu extends Fragment {
         View viewok = inflater.inflate(R.layout.fragment_trangchu, container, false);
         ImageView img_qlsp = viewok.findViewById(R.id.img_qlsp);
         tv_tenUser = viewok.findViewById(R.id.tv_tenUser);
+        ImageView img_qluser = viewok.findViewById(R.id.img_qlUser);
+
 
         auth = FirebaseAuth.getInstance();
         checkUser();
@@ -47,6 +50,12 @@ public class fragment_trangchu extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getContext(), QLySanPhamActivity.class));
+            }
+        });
+        img_qluser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), QLyUserActivity.class));
             }
         });
 

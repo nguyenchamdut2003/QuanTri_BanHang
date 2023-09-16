@@ -8,9 +8,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.MenuItem;
-import android.widget.Toast;
+
 
 import com.example.quantri_banhang.actitvity.LoginActivity;
 import com.example.quantri_banhang.fragment.fragment_trangchu;
