@@ -46,6 +46,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -64,8 +65,10 @@ public class QLySanPhamActivity extends AppCompatActivity {
 
 
     private ArrayAdapter<String> adapter;
+    private ArrayAdapter<String> adapter1;
 
     private ArrayList<String> listSpin;
+    private ArrayList<String> listSpin1;
     private String nameCat;
 
     private FloatingActionButton fab_pro;
@@ -73,12 +76,15 @@ public class QLySanPhamActivity extends AppCompatActivity {
     private Uri filePath; // đường dẫn file
     // khai báo request code để chọn ảnh
     private final int PICK_IMAGE_REQUEST = 22;
-    FirebaseStorage storage;
+    private FirebaseStorage storage;
 
-    StorageReference storageReference;
-    ImageView img_preview;
-    String TAG = "chuongdk";
-    String link_anh;
+    private StorageReference storageReference;
+    private ImageView img_preview;
+    public static final String TAG = "chuongdk";
+    private String link_anh;
+    private Spinner spn_filter;
+    LinearLayoutManager layoutManager;
+    DividerItemDecoration dividerItemDecoration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +96,35 @@ public class QLySanPhamActivity extends AppCompatActivity {
         initView();
         getSanpham();
         listSpin = new ArrayList<>();
+        listSpin1 = new ArrayList<>();
+
         adapter = new ArrayAdapter<>(this, R.layout.item_spinner_add, listSpin);
         getDataCat();
+
+        layoutManager= new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        dividerItemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        mlist= new ArrayList<>();
+        madapter_qlySanPham = new Adapter_QlySanPham(mlist,getApplicationContext());
+        recyclerView.setAdapter(madapter_qlySanPham);
+
+        adapter1 = new ArrayAdapter<>(this,R.layout.item_spinner_add,listSpin1);
+        spn_filter.setAdapter(adapter1);
+        spn_filter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (listSpin1.get(i).equals("Tất cả")){
+                    getSanpham();
+                }else{
+                    getDataByCat(listSpin1.get(i));
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +141,42 @@ public class QLySanPhamActivity extends AppCompatActivity {
 
     }
 
+
+
+    private void initView() {
+
+        fab_pro = findViewById(R.id.fab_addPro);
+        btn_back = findViewById(R.id.img_back);
+        img_preview = findViewById(R.id.img_pro_add);
+        spn_filter = findViewById(R.id.spn_filter);
+
+        recyclerView= findViewById(R.id.rcv_pro);
+
+    }
+    private void getDataByCat(String value) {
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+        Query query = reference.child("Products").orderByChild("category").equalTo(value);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    mlist.clear();
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        DTO_QlySanPham dto_qlySanPham = issue.getValue(DTO_QlySanPham.class);
+                        mlist.add(dto_qlySanPham);
+                    }
+                    madapter_qlySanPham.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
     private void showDialogAdd() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Products");
@@ -203,21 +272,7 @@ public class QLySanPhamActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void initView() {
 
-        fab_pro = findViewById(R.id.fab_addPro);
-        btn_back = findViewById(R.id.img_back);
-        img_preview = findViewById(R.id.img_pro_add);
-
-        recyclerView= findViewById(R.id.rcv_pro);
-        LinearLayoutManager layoutManager= new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        DividerItemDecoration dividerItemDecoration= new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
-        recyclerView.addItemDecoration(dividerItemDecoration);
-        mlist= new ArrayList<>();
-        madapter_qlySanPham = new Adapter_QlySanPham(mlist,getApplicationContext());
-        recyclerView.setAdapter(madapter_qlySanPham);
-    }
 
     private void getSanpham(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -225,7 +280,7 @@ public class QLySanPhamActivity extends AppCompatActivity {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                mlist.clear();
                 for (DataSnapshot snapshot2 :
                         snapshot.getChildren()) {
 
@@ -250,13 +305,17 @@ public class QLySanPhamActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listSpin.clear();
+                listSpin1.clear();
+                listSpin1.add("Tất cả");
                 for (DataSnapshot snapshot1 :
                         snapshot.getChildren()) {
 
                     CategoryDTO categoryDTO = snapshot1.getValue(CategoryDTO.class);
                     listSpin.add(categoryDTO.getName());
-                }
+                    listSpin1.add(categoryDTO.getName());
 
+                }
+                adapter1.notifyDataSetChanged();
                 adapter.notifyDataSetChanged();
             }
 
