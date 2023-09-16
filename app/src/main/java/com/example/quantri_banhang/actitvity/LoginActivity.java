@@ -82,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         auth = FirebaseAuth.getInstance();
+
         database = FirebaseDatabase.getInstance();
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -118,6 +119,13 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = auth.getCurrentUser();
     }
 
     private void loginWithGG() {
@@ -162,7 +170,7 @@ public class LoginActivity extends AppCompatActivity {
                             database.getReference().child("Users").child(user.getUid()).setValue(map);
                             Toast.makeText(LoginActivity.this, "Login Email Success.", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            finish();
+                            finishAffinity();
                         }else{
                             Log.e(TAG, "onComplete: something!!" );
                         }
