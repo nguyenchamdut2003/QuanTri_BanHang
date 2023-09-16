@@ -61,7 +61,7 @@ import java.util.UUID;
 
 public class QLySanPhamActivity extends AppCompatActivity {
 
-
+    String abc;
     private SearchView sv_search;
     private RecyclerView recyclerView;
     private Adapter_QlySanPham madapter_qlySanPham;
