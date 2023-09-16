@@ -6,10 +6,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.example.quantri_banhang.actitvity.LoginActivity;
 import com.example.quantri_banhang.fragment.fragment_trangchu;
 import com.example.quantri_banhang.fragment.fragment_taikhoan;
 import com.example.quantri_banhang.fragment.fragment_loai;
@@ -17,13 +20,19 @@ import com.example.quantri_banhang.fragment.fragment_loai;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 
 public class MainActivity extends AppCompatActivity {
     private FragmentManager fragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
 
         //code giao diện
@@ -49,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
     public void replaceFragment(Fragment fragment){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.id_frame,fragment);

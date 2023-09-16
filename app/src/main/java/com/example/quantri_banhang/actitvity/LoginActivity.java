@@ -154,17 +154,21 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void fireWithGG(String idToken) {
+        progressDialog.show();
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressDialog.dismiss();
                         if (task.isSuccessful()) {
                             FirebaseUser user = auth.getCurrentUser();
                             HashMap<String, Object> map = new HashMap<>();
                             map.put("id", user.getUid());
                             map.put("fullname", user.getDisplayName());
-                            map.put("profile", user.getPhotoUrl().toString());
+                            map.put("email",user.getEmail());
+                            map.put("role","Admin");
 
 
                             database.getReference().child("Users").child(user.getUid()).setValue(map);
@@ -228,8 +232,8 @@ public class LoginActivity extends AppCompatActivity {
                             DatabaseReference myRefEmail = database.getReference("Users/" + user.getUid() + "/email");
                             myRefEmail.setValue(user.getEmail());
 
-                            DatabaseReference myRefPassword = database.getReference("Users/" + user.getUid() + "/password");
-                            myRefPassword.setValue(password);
+//                            DatabaseReference myRefPassword = database.getReference("Users/" + user.getUid() + "/password");
+//                            myRefPassword.setValue(password);
 
 //                            DatabaseReference myRefFullname = database.getReference("Users/"+user.getUid()+"/fullname");
 //                            myRefFullname.setValue("");

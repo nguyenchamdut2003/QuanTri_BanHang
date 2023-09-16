@@ -27,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +60,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class QLySanPhamActivity extends AppCompatActivity {
+
+
+    private SearchView sv_search;
     private RecyclerView recyclerView;
     private Adapter_QlySanPham madapter_qlySanPham;
     private List<DTO_QlySanPham> mlist;
@@ -90,11 +94,24 @@ public class QLySanPhamActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qly_san_pham);
+        sv_search = findViewById(R.id.sv_search);
+        sv_search.clearFocus();
+        sv_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String s) {
+                getSanpham(s);
+                return true;
+            }
+        });
         storage = FirebaseStorage.getInstance("gs://duanbanhangthuctap-94f71.appspot.com");
         storageReference = storage.getReference();
         initView();
-        getSanpham();
+
         listSpin = new ArrayList<>();
         listSpin1 = new ArrayList<>();
 
@@ -115,7 +132,7 @@ public class QLySanPhamActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (listSpin1.get(i).equals("Tất cả")){
-                    getSanpham();
+                    getSanpham("");
                 }else{
                     getDataByCat(listSpin1.get(i));
                 }
@@ -140,8 +157,6 @@ public class QLySanPhamActivity extends AppCompatActivity {
         });
 
     }
-
-
 
     private void initView() {
 
@@ -274,7 +289,7 @@ public class QLySanPhamActivity extends AppCompatActivity {
 
 
 
-    private void getSanpham(){
+    private void getSanpham(String key){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Products");
         myRef.addValueEventListener(new ValueEventListener() {
@@ -285,7 +300,9 @@ public class QLySanPhamActivity extends AppCompatActivity {
                         snapshot.getChildren()) {
 
                     DTO_QlySanPham dto_qlySanPham = snapshot2.getValue(DTO_QlySanPham.class);
-                    mlist.add(dto_qlySanPham);
+                        if (dto_qlySanPham.getName().contains(key)){
+                            mlist.add(dto_qlySanPham);
+                        }
                 }
 
                 madapter_qlySanPham.notifyDataSetChanged();
