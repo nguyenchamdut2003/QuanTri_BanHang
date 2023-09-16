@@ -140,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                    GoogleSignInAccount account = task.getResult(ApiException.class);
+                GoogleSignInAccount account = task.getResult(ApiException.class);
                 fireWithGG(account.getIdToken());
 
             } catch (Exception e) {
