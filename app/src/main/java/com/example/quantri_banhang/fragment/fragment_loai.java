@@ -1,9 +1,13 @@
 package com.example.quantri_banhang.fragment;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,10 +36,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-public class fragment_loai extends Fragment {
+public class fragment_loai extends Fragment implements AdapterCategory.OnClick{
+    String TAG = "fragment_loai";
     View mview;
     private ListView listView;
     private AdapterCategory categoryadapter;
@@ -56,7 +64,7 @@ public class fragment_loai extends Fragment {
         //Lấy danh sách loại
         listView = viewok.findViewById(R.id.lv_loai);
         mlistCategory = new ArrayList<>();
-        categoryadapter = new AdapterCategory(mlistCategory, getActivity());
+        categoryadapter = new AdapterCategory(mlistCategory, getActivity(), this);
         listView.setAdapter(categoryadapter);
         getListCategory();
 
@@ -136,5 +144,75 @@ public class fragment_loai extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onClickUpdate(CategoryDTO categoryDTO) {
+        final Dialog dialog1 = new Dialog(getActivity());
+        dialog1.setContentView(R.layout.dialog_addcategory);
+        dialog1.setCancelable(false);
+
+        Window window = dialog1.getWindow();
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        if (dialog1 != null && dialog1.getWindow() != null) {
+            dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        }
+
+        EditText edname = dialog1.findViewById(R.id.ed_name);
+        Button btnadd = dialog1.findViewById(R.id.btn_them);
+        Button btnhuy = dialog1.findViewById(R.id.btn_huy);
+        TextView tv_tieude = dialog1.findViewById(R.id.tv_title);
+        btnadd.setText("Sửa");
+        tv_tieude.setText("Updete Category");
+        btnadd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String dataName = edname.getText().toString().trim();
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                Log.d(TAG, "onClick: " + categoryDTO.getIdCate());
+                DatabaseReference myRefId = database.getReference("category/" + categoryDTO.getIdCate());
+                Map<String, Object> map = new HashMap<>();
+                map.put("name", dataName);
+
+                myRefId.updateChildren(map, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                        Toast.makeText(getActivity(), "Update thành công", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialog1.dismiss();
+            }
+        });
+        btnhuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog1.dismiss();
+            }
+        });
+        dialog1.show();
+    }
+
+    @Override
+    public void onClickDelete(CategoryDTO categoryDTO) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Xóa loại")
+                .setMessage("Bản có chắc chắc muốn xóa bản ghi này không ?")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        Log.d(TAG, "onClick: " + categoryDTO.getIdCate());
+                        DatabaseReference myRefId = database.getReference("category/" + categoryDTO.getIdCate());
+                        myRefId.removeValue(new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                Toast.makeText(getActivity(), "Xóa thành công", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 }
