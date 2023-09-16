@@ -51,7 +51,7 @@
             android:id="@+id/tv_tenUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Đặng Chương !"
+            android:text=""
             android:textStyle="bold"
             android:textColor="#1F605A"
             android:textSize="20sp"
