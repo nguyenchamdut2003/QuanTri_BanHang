@@ -5,6 +5,7 @@ import static com.facebook.share.widget.ShareDialog.show;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.quantri_banhang.Adapter.AdapterUser;
+import com.example.quantri_banhang.DTO.DTO_QlySanPham;
 import com.example.quantri_banhang.DTO.UserDTO;
 import com.example.quantri_banhang.R;
 import com.google.firebase.database.DataSnapshot;
@@ -30,7 +32,7 @@ public class QLyUserActivity extends AppCompatActivity {
     private AdapterUser mAdapterUser;
     private List<UserDTO> mListUsers;
 
-
+    private SearchView sv_searchUser;
 
 
     @Override
@@ -39,6 +41,10 @@ public class QLyUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_qly_user);
 
         ImageView imgback = findViewById(R.id.img_backuser);
+        sv_searchUser = findViewById(R.id.sv_searchUser);
+        sv_searchUser.clearFocus();
+
+
         imgback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,26 +64,37 @@ public class QLyUserActivity extends AppCompatActivity {
 
         rcvUsers.setAdapter(mAdapterUser);
 
-        getListUsers();
+        getListUsers("");
+        sv_searchUser.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String s) {
+                getListUsers(s);
+                return true;
+            }
+        });
 
 
 
     }
 
-
-
-
-    public void getListUsers(){
+    public void getListUsers(String key){
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRefId = database.getReference("Users");
         myRefId.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mListUsers.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     UserDTO userDTO = dataSnapshot.getValue(UserDTO.class);
-                    mListUsers.add(userDTO);
+                    if (userDTO.getEmail().contains(key)){
+                       mListUsers.add(userDTO);
+                   }
                 }
                 mAdapterUser.notifyDataSetChanged();
             }
