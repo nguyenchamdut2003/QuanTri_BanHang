@@ -6,21 +6,17 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 
-import com.example.quantri_banhang.actitvity.LoginActivity;
 import com.example.quantri_banhang.fragment.fragment_trangchu;
 import com.example.quantri_banhang.fragment.fragment_taikhoan;
-import com.example.quantri_banhang.fragment.fragment_loai;
-
+import com.example.quantri_banhang.fragment.fragment_chat;
+import com.example.quantri_banhang.fragment.fragment_bill;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -50,8 +46,10 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(fragment_trangchu.newInstance());
                 }else if (id == R.id.nav_taikhoan){
                     replaceFragment(fragment_taikhoan.newInstance());
-                }else if (id == R.id.nav_loai){
-                    replaceFragment(fragment_loai.newInstance());
+                }else if (id == R.id.nav_chat){
+                    replaceFragment(fragment_chat.newInstance());
+                }else if (id == R.id.nav_donhang){
+                    replaceFragment(fragment_bill.newInstance());
                 }
                 return true;
             }

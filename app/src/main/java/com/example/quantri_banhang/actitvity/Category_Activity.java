@@ -1,34 +1,31 @@
-package com.example.quantri_banhang.fragment;
+package com.example.quantri_banhang.actitvity;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.example.quantri_banhang.Adapter.AdapterCategory;
 import com.example.quantri_banhang.DTO.CategoryDTO;
 import com.example.quantri_banhang.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,54 +34,43 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class fragment_loai extends Fragment implements AdapterCategory.OnClick{
-    String TAG = "fragment_loai";
+public class Category_Activity extends AppCompatActivity implements AdapterCategory.OnClick{
+    String TAG = "categoryactivity";
     View mview;
     private ListView listView;
+    ImageView btnback;
     private AdapterCategory categoryadapter;
 
     private ArrayList<CategoryDTO> mlistCategory;
-    public fragment_loai() {
-        // Required empty public constructor
+    public void Anhxa(){
+        btnback = findViewById(R.id.id_back);
+        listView = findViewById(R.id.lv_loai);
     }
-    public static fragment_loai newInstance() {
-        fragment_loai fragment = new fragment_loai();
-
-        return fragment;
-    }
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View viewok = inflater.inflate(R.layout.fragment_loai, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_category);
+        Anhxa();
         //Lấy danh sách loại
-        listView = viewok.findViewById(R.id.lv_loai);
         mlistCategory = new ArrayList<>();
-        categoryadapter = new AdapterCategory(mlistCategory, getActivity(), this);
+        categoryadapter = new AdapterCategory(mlistCategory, this, this);
         listView.setAdapter(categoryadapter);
         getListCategory();
 
-        ImageButton btnAdd = viewok.findViewById(R.id.imgbtn_themloai);
+        ImageButton btnAdd = findViewById(R.id.imgbtn_themloai);
+
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addcategory();
             }
         });
-        return viewok;
     }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
     public void addcategory(){
-        final Dialog dialog1 = new Dialog(getActivity());
+        final Dialog dialog1 = new Dialog(this);
         dialog1.setContentView(R.layout.dialog_addcategory);
         dialog1.setCancelable(false);
 
@@ -97,7 +83,6 @@ public class fragment_loai extends Fragment implements AdapterCategory.OnClick{
         EditText edname = dialog1.findViewById(R.id.ed_name);
         Button btnadd = dialog1.findViewById(R.id.btn_them);
         Button btnhuy = dialog1.findViewById(R.id.btn_huy);
-        FirebaseAuth auth = FirebaseAuth.getInstance();
         btnadd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,7 +94,7 @@ public class fragment_loai extends Fragment implements AdapterCategory.OnClick{
                 myRefId.setValue(categoryDTO, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        Toast.makeText(getActivity(), "Thêm loại thành công", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Category_Activity.this, "Thêm loại thành công", Toast.LENGTH_SHORT).show();
                     }
                 });
                 dialog1.dismiss();
@@ -148,7 +133,7 @@ public class fragment_loai extends Fragment implements AdapterCategory.OnClick{
 
     @Override
     public void onClickUpdate(CategoryDTO categoryDTO) {
-        final Dialog dialog1 = new Dialog(getActivity());
+        final Dialog dialog1 = new Dialog(this);
         dialog1.setContentView(R.layout.dialog_addcategory);
         dialog1.setCancelable(false);
 
@@ -177,7 +162,7 @@ public class fragment_loai extends Fragment implements AdapterCategory.OnClick{
                 myRefId.updateChildren(map, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        Toast.makeText(getActivity(), "Update thành công", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Category_Activity.this, "Update thành công", Toast.LENGTH_SHORT).show();
                     }
                 });
                 dialog1.dismiss();
@@ -194,7 +179,7 @@ public class fragment_loai extends Fragment implements AdapterCategory.OnClick{
 
     @Override
     public void onClickDelete(CategoryDTO categoryDTO) {
-        new AlertDialog.Builder(getContext())
+        new AlertDialog.Builder(this)
                 .setTitle("Xóa loại")
                 .setMessage("Bản có chắc chắc muốn xóa bản ghi này không ?")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -206,7 +191,7 @@ public class fragment_loai extends Fragment implements AdapterCategory.OnClick{
                         myRefId.removeValue(new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                Toast.makeText(getActivity(), "Xóa thành công", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Category_Activity.this, "Xóa thành công", Toast.LENGTH_SHORT).show();
                             }
                         });
 
