@@ -133,7 +133,7 @@ public class QLySanPhamActivity extends AppCompatActivity implements Adapter_Qly
         spn_filter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (listSpin1.get(i).equals("Tất cả")){
+                if (listSpin1.get(i).equals("All")){
                     getSanpham("");
                 }else{
                     getDataByCat(listSpin1.get(i));
@@ -265,6 +265,7 @@ public class QLySanPhamActivity extends AppCompatActivity implements Adapter_Qly
                     int number = Integer.parseInt(ed_number.getText().toString());
                     DTO_QlySanPham sanPham = new DTO_QlySanPham(id,link_anh,namePro,price,des,nameCat,number);
 
+
                     myRef.child(id).setValue(sanPham, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
@@ -325,7 +326,7 @@ public class QLySanPhamActivity extends AppCompatActivity implements Adapter_Qly
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listSpin.clear();
                 listSpin1.clear();
-                listSpin1.add("Tất cả");
+                listSpin1.add("All");
                 for (DataSnapshot snapshot1 :
                         snapshot.getChildren()) {
 
