@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.quantri_banhang.Adapter.ListChatAdapter;
+import com.example.quantri_banhang.DTO.ChatDTO;
 import com.example.quantri_banhang.DTO.UserDTO;
 import com.example.quantri_banhang.R;
 import com.google.firebase.database.DataSnapshot;
@@ -62,57 +63,89 @@ public class fragment_chat extends Fragment {
         return viewok;
     }
 
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    private ValueEventListener chatEventListener;
+
     private void getListUserChat() {
         myRef = database.getReference("chats");
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        chatEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                listUser.clear();
+                userIds.clear();
                 for (DataSnapshot chatSnapshot : snapshot.getChildren()) {
                     String roomId = chatSnapshot.getKey();
                     if (roomId != null && roomId.endsWith("admin")) {
-
                         String userId = roomId.replace("admin", "");
-                        userIds.add(userId);
+                        if (!userIds.contains(userId)) {
+                            userIds.add(userId);
+                        }
                         Log.d(TAG, "onDataChange: " + userId);
+
+                        DataSnapshot messagesSnapshot = chatSnapshot.child("messages");
+                        ChatDTO lastMessage = null;
+                        long latestTimestamp = -1;
+
+                        for (DataSnapshot messageSnapshot : messagesSnapshot.getChildren()) {
+                            long currentTimestamp = messageSnapshot.child("timeStamp").getValue(Long.class);
+                            if (currentTimestamp > latestTimestamp) {
+                                latestTimestamp = currentTimestamp;
+                                lastMessage = messageSnapshot.getValue(ChatDTO.class);
+                            }
+                        }
+
+                        DatabaseReference usersRef = database.getReference("Users");
+                        ChatDTO finalLastMessage = lastMessage;
+                        usersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                UserDTO user = dataSnapshot.getValue(UserDTO.class);
+                                if (finalLastMessage != null) {
+                                    user.setLastMess(finalLastMessage.getMessage());
+                                    user.setLastMessageSenderId(finalLastMessage.getSenderid());
+                                }
+                                listUser.add(user);
+                                adapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
+                            }
+                        });
                     }
                 }
-                DatabaseReference usersRef = database.getReference("Users");
-                for (String userId : userIds) {
-                    usersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-
-                            UserDTO user = dataSnapshot.getValue(UserDTO.class);
-                            listUser.add(user);
-
-                            Log.d(TAG, "onDataChange: " + user.getFullname());
-                            Log.d(TAG, "onDataChange: "+user.getId());
-                            adapter.notifyDataSetChanged();
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                            Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
-                        }
-                    });
-                }
-
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Handle error
             }
-        });
+        };
 
+        myRef.addValueEventListener(chatEventListener);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onDestroy() {
+        super.onDestroy();
+        if (myRef != null && chatEventListener != null) {
+            myRef.removeEventListener(chatEventListener);
+        }
     }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (myRef != null && chatEventListener != null) {
+            myRef.removeEventListener(chatEventListener);
+        }
+    }
+
 }

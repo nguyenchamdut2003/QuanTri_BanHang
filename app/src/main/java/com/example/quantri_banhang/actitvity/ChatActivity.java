@@ -113,6 +113,7 @@ public class ChatActivity extends AppCompatActivity {
         }
         ed_chat.setText("");
         Date date = new Date();
+
         ChatDTO messagess = new ChatDTO(message,SenderUID,date.getTime());
 
         database= FirebaseDatabase.getInstance();

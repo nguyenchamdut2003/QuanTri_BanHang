@@ -39,6 +39,7 @@ public class ListChatAdapter extends RecyclerView.Adapter<ListChatAdapter.viewho
 
         UserDTO userDTO = usersArrayList.get(position);
         holder.username.setText(userDTO.getFullname());
+        holder.userstatus.setText(userDTO.getLastMess()+"");
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
