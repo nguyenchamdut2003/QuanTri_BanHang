@@ -71,7 +71,7 @@ public class fragment_chat extends Fragment {
                 for (DataSnapshot chatSnapshot : snapshot.getChildren()) {
                     String roomId = chatSnapshot.getKey();
                     if (roomId != null && roomId.endsWith("admin")) {
-                        // Trích xuất userId từ roomId
+
                         String userId = roomId.replace("admin", "");
                         userIds.add(userId);
                         Log.d(TAG, "onDataChange: " + userId);
@@ -88,21 +88,19 @@ public class fragment_chat extends Fragment {
 
                             Log.d(TAG, "onDataChange: " + user.getFullname());
                             Log.d(TAG, "onDataChange: "+user.getId());
-                            // Làm gì đó với thông tin người dùng tại đây
-                            // Ví dụ: hiển thị thông tin lên giao diện
                             adapter.notifyDataSetChanged();
 
                         }
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-                            // Xử lý lỗi ở đây
+
                             Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
                         }
                     });
                 }
 
-                // Dựa vào userIds, bạn có thể truy vấn thêm thông tin của mỗi user và hiển thị
+
             }
 
             @Override

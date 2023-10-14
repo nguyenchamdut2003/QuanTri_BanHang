@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -111,18 +112,8 @@ public class ChatActivity extends AppCompatActivity {
             return;
         }
         ed_chat.setText("");
-
-        Calendar calendar = Calendar.getInstance();
-
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1; // Trong Java, tháng bắt đầu từ 0
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-
-
-        String timeCur = hour + ":" + minute + " " + day + "/" + month + "/" + year;
-        ChatDTO messagess = new ChatDTO(message,SenderUID,timeCur);
+        Date date = new Date();
+        ChatDTO messagess = new ChatDTO(message,SenderUID,date.getTime());
 
         database= FirebaseDatabase.getInstance();
         database.getReference().child("chats")
