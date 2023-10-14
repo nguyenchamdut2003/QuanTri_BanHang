@@ -5,15 +5,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradientc">
 
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_back"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:padding="8dp"
-        android:id="@+id/img_back"/>
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
