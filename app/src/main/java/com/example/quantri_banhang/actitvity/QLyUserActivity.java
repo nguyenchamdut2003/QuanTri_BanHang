@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ public class QLyUserActivity extends AppCompatActivity {
     private List<UserDTO> mListUsers;
 
     private SearchView sv_searchUser;
+
 
 
     @Override
@@ -92,9 +94,9 @@ public class QLyUserActivity extends AppCompatActivity {
                 mListUsers.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     UserDTO userDTO = dataSnapshot.getValue(UserDTO.class);
-                    if (userDTO.getEmail().contains(key)){
+
                        mListUsers.add(userDTO);
-                   }
+             
                 }
                 mAdapterUser.notifyDataSetChanged();
             }
@@ -104,6 +106,8 @@ public class QLyUserActivity extends AppCompatActivity {
                 Toast.makeText(QLyUserActivity.this, "Get list users faild", Toast.LENGTH_SHORT).show();
             }
         });
+
+
     }
 
 

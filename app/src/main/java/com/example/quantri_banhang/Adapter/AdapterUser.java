@@ -10,11 +10,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.quantri_banhang.DTO.UserDTO;
 import com.example.quantri_banhang.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
 public class AdapterUser extends RecyclerView.Adapter<AdapterUser.UserViewHolder>{
     private List<UserDTO> listUserDTO;
+
+
 
     public AdapterUser(List<UserDTO> listUserDTO) {
         this.listUserDTO = listUserDTO;
@@ -51,6 +58,37 @@ public class AdapterUser extends RecyclerView.Adapter<AdapterUser.UserViewHolder
             super(itemView);
             tv_email = itemView.findViewById(R.id.tv_email);
             tv_fullname = itemView.findViewById(R.id.tv_fullname);
+
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRefId1 = database.getReference("Users");
+            myRefId1.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        // Dữ liệu người dùng được tìm thấy
+                        UserDTO user = snapshot.getValue(UserDTO.class);
+                        if (user != null) {
+                            tv_email.setText("Email:"+user.getEmail());
+
+                            if (user.getFullname() != null) {
+                                String fullname = user.getFullname();
+                                String fullnameText = "FullName: " + fullname;
+                                tv_fullname.setText(fullnameText);
+                                tv_fullname.setVisibility(View.VISIBLE); // Hiển thị TextView
+                            } else {
+                                // Dữ liệu full name chưa điền, hiển thị "chưa điền" và giữ TextView không bị ẩn
+                                tv_fullname.setText("FullName: chưa điền");
+                                tv_fullname.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
     }
 }
