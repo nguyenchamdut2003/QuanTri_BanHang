@@ -33,6 +33,7 @@ public class fragment_chat extends Fragment {
     ArrayList<UserDTO> listUser;
     ListChatAdapter adapter;
     RecyclerView rcv_listChat;
+    private ValueEventListener chatEventListener;
 
     public fragment_chat() {
         // Required empty public constructor
@@ -69,7 +70,7 @@ public class fragment_chat extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private ValueEventListener chatEventListener;
+
 
     private void getListUserChat() {
         myRef = database.getReference("chats");
@@ -91,7 +92,6 @@ public class fragment_chat extends Fragment {
                         DataSnapshot messagesSnapshot = chatSnapshot.child("messages");
                         ChatDTO lastMessage = null;
                         long latestTimestamp = -1;
-
                         for (DataSnapshot messageSnapshot : messagesSnapshot.getChildren()) {
                             long currentTimestamp = messageSnapshot.child("timeStamp").getValue(Long.class);
                             if (currentTimestamp > latestTimestamp) {
@@ -135,15 +135,19 @@ public class fragment_chat extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        listUser.clear();
         if (myRef != null && chatEventListener != null) {
             myRef.removeEventListener(chatEventListener);
+
         }
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        listUser.clear();
         if (myRef != null && chatEventListener != null) {
             myRef.removeEventListener(chatEventListener);
+
         }
     }
 
