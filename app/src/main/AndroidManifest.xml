@@ -18,6 +18,9 @@
             android:name=".actitvity.ChatActivity"
             android:exported="false" />
         <activity
+            android:name=".actitvity.ThongKeActivity"
+            android:exported="false" />
+        <activity
             android:name=".Package_Bill.Activity.Chitietdonhang_Activity"
             android:exported="false" />
         <activity

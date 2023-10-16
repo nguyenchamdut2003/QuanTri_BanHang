@@ -15,11 +15,35 @@
       },
       "oauth_client": [
         {
+          "client_id": "1054913907114-2tn7k4cb15ti0fg5f5c6vt3jpij1a3bq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.banhang_khach",
+            "certificate_hash": "2fa1efbe4899497887d788acebb8353dc41384f0"
+          }
+        },
+        {
           "client_id": "1054913907114-72mmjm3ra0k5h97b2lsbs20i4ngc3v65.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.banhang_khach",
             "certificate_hash": "e1a5b1f574b77c6630bcedbb83ea6ac8a1ef05fe"
+          }
+        },
+        {
+          "client_id": "1054913907114-kemcj3lgp5q0m3ghv17ovj5j0mqf80hc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.banhang_khach",
+            "certificate_hash": "fe0842c372565a92b93825181fef2d9f5621f6c3"
+          }
+        },
+        {
+          "client_id": "1054913907114-p6blqk1akbfg2jv83sp1dcvfg49bqucp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.banhang_khach",
+            "certificate_hash": "acd31b1ae92eaeb3b1b52df95b2abd731422bd52"
           }
         },
         {
@@ -65,6 +89,14 @@
           "android_info": {
             "package_name": "com.example.quantri_banhang",
             "certificate_hash": "acd31b1ae92eaeb3b1b52df95b2abd731422bd52"
+          }
+        },
+        {
+          "client_id": "1054913907114-chh3piil3cgp1llsg7goq8mf1cecea5t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quantri_banhang",
+            "certificate_hash": "fe0842c372565a92b93825181fef2d9f5621f6c3"
           }
         },
         {

@@ -17,6 +17,7 @@ import com.example.quantri_banhang.R;
 import com.example.quantri_banhang.actitvity.LoginActivity;
 import com.example.quantri_banhang.actitvity.QLySanPhamActivity;
 import com.example.quantri_banhang.actitvity.QLyUserActivity;
+import com.example.quantri_banhang.actitvity.ThongKeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -24,7 +25,7 @@ public class fragment_trangchu extends Fragment {
 
     private FirebaseAuth auth;
     View view;
-    TextView tv_tenUser;
+    TextView tv_tenUser, tv_xemchitiet;
     public fragment_trangchu() {
         // Required empty public constructor
     }
@@ -42,7 +43,7 @@ public class fragment_trangchu extends Fragment {
         ImageView img_qlsp = viewok.findViewById(R.id.img_qlsp);
         tv_tenUser = viewok.findViewById(R.id.tv_tenUser);
         ImageView img_qluser = viewok.findViewById(R.id.img_qlUser);
-
+        tv_xemchitiet = viewok.findViewById(R.id.tv_xemchitiet);
 
         auth = FirebaseAuth.getInstance();
         checkUser();
@@ -59,6 +60,13 @@ public class fragment_trangchu extends Fragment {
             }
         });
 
+        tv_xemchitiet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ThongKeActivity.class);
+                startActivity(intent);
+            }
+        });
         return viewok;
     }
 
