@@ -142,7 +142,6 @@ public class fragment_chat extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         if (myRef != null && chatEventListener != null) {
             myRef.removeEventListener(chatEventListener);
         }
