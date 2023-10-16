@@ -23,6 +23,7 @@ public class AdapterUser extends RecyclerView.Adapter<AdapterUser.UserViewHolder
 
 
 
+
     public AdapterUser(List<UserDTO> listUserDTO) {
         this.listUserDTO = listUserDTO;
     }
