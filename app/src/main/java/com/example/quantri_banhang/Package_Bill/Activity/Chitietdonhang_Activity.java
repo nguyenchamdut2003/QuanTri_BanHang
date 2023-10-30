@@ -116,18 +116,6 @@ public class Chitietdonhang_Activity extends AppCompatActivity {
         myRefId.updateChildren(map, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                Intent intent;
-                if (upstatus == 2){
-                    intent = new Intent(Chitietdonhang_Activity.this, Layhang_Activity.class);
-                    startActivity(intent);
-                }else if (upstatus == 3){
-                    intent = new Intent(Chitietdonhang_Activity.this, Giaohang_Activity.class);
-                    startActivity(intent);
-                }else if (upstatus == 4){
-                    intent = new Intent(Chitietdonhang_Activity.this, Hoanthanhdon_Activity.class);
-                    startActivity(intent);
-                }
-
                 Toast.makeText(Chitietdonhang_Activity.this, "Đã xác nhận", Toast.LENGTH_SHORT).show();
             }
         });

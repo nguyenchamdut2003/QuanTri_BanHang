@@ -20,6 +20,7 @@ import com.example.quantri_banhang.Package_Bill.Activity.Hoanthanhdon_Activity;
 import com.example.quantri_banhang.Package_Bill.Activity.Layhang_Activity;
 import com.example.quantri_banhang.Package_Bill.Activity.Xacnhandon_Activity;
 import com.example.quantri_banhang.R;
+import com.example.quantri_banhang.actitvity.Billout_Activity;
 import com.example.quantri_banhang.actitvity.Category_Activity;
 import com.example.quantri_banhang.actitvity.LoginActivity;
 import com.facebook.login.LoginManager;
@@ -37,7 +38,7 @@ public class fragment_taikhoan extends Fragment {
     String TAG = "fragmenttaikhoan";
     TextView tv_fullname;
     private FirebaseAuth auth;
-    CardView carddscagoryte;
+    CardView carddscagoryte, carddonhuy;
     public fragment_taikhoan() {
         // Required empty public constructor
     }
@@ -53,6 +54,7 @@ public class fragment_taikhoan extends Fragment {
         View viewok = inflater.inflate(R.layout.fragment_taikhoan, container, false);
         tv_fullname = viewok.findViewById(R.id.tv_fullname);
         carddscagoryte = viewok.findViewById(R.id.card_dscagoryte);
+        carddonhuy = viewok.findViewById(R.id.card_donhuy);
         rlxacnhandon = viewok.findViewById(R.id.rl_xacnhandon);
         rllayhang = viewok.findViewById(R.id.rl_layhang);
         rldanggiao = viewok.findViewById(R.id.rl_danggiao);
@@ -71,7 +73,6 @@ public class fragment_taikhoan extends Fragment {
                 startActivity(intent);
             }
         });
-
         rldanggiao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,12 +80,18 @@ public class fragment_taikhoan extends Fragment {
                 startActivity(intent);
             }
         });
-
         rlhoanthanh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), Hoanthanhdon_Activity.class);
                 intent.putExtra("status", 4);
+                startActivity(intent);
+            }
+        });
+        carddonhuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), Billout_Activity.class);
                 startActivity(intent);
             }
         });

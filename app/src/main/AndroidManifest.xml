@@ -15,6 +15,9 @@
         android:theme="@style/Theme.QuanTri_BanHang"
         tools:targetApi="31">
         <activity
+            android:name=".actitvity.Billout_Activity"
+            android:exported="false" />
+        <activity
             android:name=".actitvity.ChatActivity"
             android:exported="false" />
         <activity
