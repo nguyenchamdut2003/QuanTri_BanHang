@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.example.quantri_banhang.Adapter.ChatAdapter;
 import com.example.quantri_banhang.DTO.ChatDTO;
+import com.example.quantri_banhang.DTO.FcmMessage;
+import com.example.quantri_banhang.Interface.FcmApiService;
 import com.example.quantri_banhang.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,8 +28,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -73,6 +83,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 addMessage();
+                sendNotification(reciverUid, ed_chat.getText().toString());
             }
         });
 
@@ -84,6 +95,70 @@ public class ChatActivity extends AppCompatActivity {
         rcv_chat = findViewById(R.id.rcv_chat);
         tv_nameShop = findViewById(R.id.tv_nameShop);
     }
+
+    public void sendFcmData(String fcmToken, String content) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://fcm.googleapis.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        FcmApiService apiService = retrofit.create(FcmApiService.class);
+
+        FcmMessage message = new FcmMessage();
+        message.setTo(fcmToken);
+
+        Map<String, String> data = new HashMap<>();
+        data.put("title", "Có Tin Nhắn Mới");
+        data.put("message", content);
+        Log.d("Chat", "sendFcmData: "+content);
+        message.setData(data);
+
+        Call<ResponseBody> call = apiService.sendFcmMessage(message);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // Gửi thành công
+                    Log.d("ChatActivity", "Gửi thông báo FCM thành công");
+                } else {
+                    // Gửi thất bại
+                    Log.e("ChatActivity", "Gửi thông báo FCM thất bại");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Xảy ra lỗi
+                Log.e("ChatActivity", "Lỗi khi gửi thông báo FCM: " + t.getMessage());
+            }
+        });
+    }
+
+    private void sendNotification(String recipientUID, String message) {
+        String notificationTitle = "Bạn có tin nhắn mới!";
+        String notificationMessage = message;
+
+        DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("userTokens").child(recipientUID);
+        tokenRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String recipientToken = dataSnapshot.getValue(String.class);
+                if (recipientToken != null) {
+                    Map<String, String> dataMap = new HashMap<>();
+                    dataMap.put("title", notificationTitle);
+                    dataMap.put("message", notificationMessage);
+
+                    sendFcmData(recipientToken, notificationMessage);
+                    Log.d("ChatActivity", "Gửi thông báo đến FCM Service");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("ChatActivity", "Lỗi khi lấy mã FCM của người nhận: " + databaseError.getMessage());
+            }
+        });
+    }
     private void getListChat() {
         DatabaseReference chatreference = database.getReference().child("chats").child(senderRoom).child("messages");
         chatreference.addValueEventListener(new ValueEventListener() {
@@ -93,9 +168,12 @@ public class ChatActivity extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot:snapshot.getChildren()){
                     ChatDTO messages = dataSnapshot.getValue(ChatDTO.class);
                     list.add(messages);
+//                    sendNotification(reciverUid, ed_chat.getText().toString());
                 }
                 Log.d("chuongdk", "onDataChange: "+list.size());
                 adapter.notifyDataSetChanged();
+
+
             }
 
             @Override
@@ -114,27 +192,28 @@ public class ChatActivity extends AppCompatActivity {
         ed_chat.setText("");
         Date date = new Date();
 
-        ChatDTO messagess = new ChatDTO(message,SenderUID,date.getTime());
-
         database= FirebaseDatabase.getInstance();
-        database.getReference().child("chats")
+        DatabaseReference databaseReference = database.getReference().child("chats")
                 .child(senderRoom)
-                .child("messages")
-                .push().setValue(messagess).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        database.getReference().child("chats")
-                                .child(reciverRoom)
-                                .child("messages")
-                                .push().setValue(messagess).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
+                .child("messages");
+        String id = databaseReference.push().getKey();
+        ChatDTO messagess = new ChatDTO(id,message,SenderUID,date.getTime());
+        databaseReference.child(id).setValue(messagess).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                database.getReference().child("chats")
+                        .child(reciverRoom)
+                        .child("messages")
+                        .child(id).setValue(messagess).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
 
-                                    }
-                                });
-                    }
-                });
+                            }
+                        });
+            }
+        });
     }
+
 
 
 }
