@@ -49,6 +49,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -177,6 +178,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             database.getReference().child("Users").child(user.getUid()).setValue(map);
                             Toast.makeText(LoginActivity.this, "Login Email Success.", Toast.LENGTH_SHORT).show();
+                            saveUserFCMToken();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finishAffinity();
                         }else{
@@ -229,7 +231,7 @@ public class LoginActivity extends AppCompatActivity {
 //                            Log.e(TAG, "onComplete: " + user.getEmail());
                             Log.e(TAG, "onComplete: " + user.getUid());
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
-
+                            saveUserFCMToken();
                             DatabaseReference myRefId = database.getReference("Users/" + user.getUid() + "/id");
                             myRefId.setValue(user.getUid());
 
@@ -262,5 +264,22 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+    private void saveUserFCMToken() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
 
+                        String token = task.getResult();
+
+                        String userUID = "admin";
+                        DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("userTokens").child(userUID);
+                        tokenRef.setValue(token);
+                    }
+                });
+    }
 }
