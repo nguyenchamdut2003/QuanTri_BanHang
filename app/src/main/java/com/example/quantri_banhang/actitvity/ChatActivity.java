@@ -82,8 +82,16 @@ public class ChatActivity extends AppCompatActivity {
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addMessage();
-                sendNotification(reciverUid, ed_chat.getText().toString());
+                Log.d("DEBUG", "onClick: "+ed_chat.getText().toString());
+                String message = ed_chat.getText().toString();
+                if (message.isEmpty()) {
+                    Toast.makeText(ChatActivity.this, "Enter The Message First", Toast.LENGTH_SHORT).show();
+                } else {
+                    addMessage();
+                    sendNotification(reciverUid, message);
+
+                }
+
             }
         });
 
@@ -118,10 +126,10 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    // Gửi thành công
+
                     Log.d("ChatActivity", "Gửi thông báo FCM thành công");
                 } else {
-                    // Gửi thất bại
+
                     Log.e("ChatActivity", "Gửi thông báo FCM thất bại");
                 }
             }
@@ -136,7 +144,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private void sendNotification(String recipientUID, String message) {
         String notificationTitle = "Bạn có tin nhắn mới!";
-        String notificationMessage = message;
 
         DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("userTokens").child(recipientUID);
         tokenRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -146,10 +153,9 @@ public class ChatActivity extends AppCompatActivity {
                 if (recipientToken != null) {
                     Map<String, String> dataMap = new HashMap<>();
                     dataMap.put("title", notificationTitle);
-                    dataMap.put("message", notificationMessage);
+                    dataMap.put("message", message);
 
-                    sendFcmData(recipientToken, notificationMessage);
-                    Log.d("ChatActivity", "Gửi thông báo đến FCM Service");
+                    sendFcmData(recipientToken, message);
                 }
             }
 
@@ -172,8 +178,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
                 Log.d("chuongdk", "onDataChange: "+list.size());
                 adapter.notifyDataSetChanged();
-
-
+                
             }
 
             @Override

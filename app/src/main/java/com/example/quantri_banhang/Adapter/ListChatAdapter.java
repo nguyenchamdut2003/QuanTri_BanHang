@@ -26,7 +26,10 @@ public class ListChatAdapter extends RecyclerView.Adapter<ListChatAdapter.viewho
         this.context=context;
         this.usersArrayList=usersArrayList;
     }
-
+    public void updateList(ArrayList<UserDTO> userList) {
+        this.usersArrayList = userList;
+        notifyDataSetChanged();
+    }
     @NonNull
     @Override
     public ListChatAdapter.viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

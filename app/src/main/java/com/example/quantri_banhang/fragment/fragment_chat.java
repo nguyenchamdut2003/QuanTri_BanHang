@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,7 +35,8 @@ public class fragment_chat extends Fragment {
     ListChatAdapter adapter;
     RecyclerView rcv_listChat;
     private ValueEventListener chatEventListener;
-
+    SearchView sv_chat;
+    ArrayList<UserDTO> filteredList;
     public fragment_chat() {
         // Required empty public constructor
     }
@@ -48,11 +50,11 @@ public class fragment_chat extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View viewok = inflater.inflate(R.layout.fragment_chat, container, false);
+        View view = inflater.inflate(R.layout.fragment_chat, container, false);
         database = FirebaseDatabase.getInstance();
-        rcv_listChat = viewok.findViewById(R.id.rcv_listchat);
-
-
+        rcv_listChat = view.findViewById(R.id.rcv_listchat);
+        sv_chat = view.findViewById(R.id.sv_chat);
+        filteredList = new ArrayList<>();
 
         userIds = new ArrayList<>();
         listUser = new ArrayList<>();
@@ -61,9 +63,28 @@ public class fragment_chat extends Fragment {
 
         rcv_listChat.setAdapter(adapter);
 
-        return viewok;
-    }
 
+        sv_chat.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filteredList.clear();
+                for (UserDTO user : listUser) {
+                    if (user.getFullname().toLowerCase().contains(newText.toLowerCase())) {
+                        filteredList.add(user);
+                    }
+                }
+
+                adapter.updateList(filteredList);
+                return true;
+            }
+        });
+        return view;
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
