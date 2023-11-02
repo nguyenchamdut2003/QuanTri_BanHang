@@ -276,8 +276,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         String token = task.getResult();
 
-                        String userUID = "admin";
-                        DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("userTokens").child(userUID);
+                        String userUID =  FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("adminTokens").child(userUID);
                         tokenRef.setValue(token);
                     }
                 });

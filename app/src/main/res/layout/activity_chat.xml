@@ -62,7 +62,8 @@
             android:layout_margin="8dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"
-            android:id="@+id/rcv_chat"/>
+            android:id="@+id/rcv_chat"
+            app:stackFromEnd="true"/>
     </LinearLayout>
     </FrameLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
