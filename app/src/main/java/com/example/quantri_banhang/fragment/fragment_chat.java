@@ -58,7 +58,7 @@ public class fragment_chat extends Fragment {
 
         userIds = new ArrayList<>();
         listUser = new ArrayList<>();
-        getListUserChat();
+
         adapter = new ListChatAdapter(getContext(),listUser);
 
         rcv_listChat.setAdapter(adapter);
@@ -171,5 +171,9 @@ public class fragment_chat extends Fragment {
 
         }
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        getListUserChat();
+    }
 }

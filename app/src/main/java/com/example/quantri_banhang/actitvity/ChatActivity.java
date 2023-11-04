@@ -116,7 +116,7 @@ public class ChatActivity extends AppCompatActivity {
         message.setTo(fcmToken);
 
         Map<String, String> data = new HashMap<>();
-        data.put("title", "Có Tin Nhắn Mới");
+        data.put("title", "Bạn có tin nhắn mới");
         data.put("message", content);
         Log.d("Chat", "sendFcmData: "+content);
         message.setData(data);
@@ -136,14 +136,13 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Xảy ra lỗi
                 Log.e("ChatActivity", "Lỗi khi gửi thông báo FCM: " + t.getMessage());
             }
         });
     }
 
     private void sendNotification(String recipientUID, String message) {
-        String notificationTitle = "Bạn có tin nhắn mới!";
+
 
         DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("userTokens").child(recipientUID);
         tokenRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -151,9 +150,6 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String recipientToken = dataSnapshot.getValue(String.class);
                 if (recipientToken != null) {
-                    Map<String, String> dataMap = new HashMap<>();
-                    dataMap.put("title", notificationTitle);
-                    dataMap.put("message", message);
 
                     sendFcmData(recipientToken, message);
                 }
