@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import com.example.quantri_banhang.fragment.fragment_trangchu;
 import com.example.quantri_banhang.fragment.fragment_taikhoan;
 import com.example.quantri_banhang.fragment.fragment_chat;
-import com.example.quantri_banhang.fragment.fragment_bill;
+import com.example.quantri_banhang.fragment.fragment_thongbao;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 }else if (id == R.id.nav_chat){
                     replaceFragment(fragment_chat.newInstance());
                 }else if (id == R.id.nav_donhang){
-                    replaceFragment(fragment_bill.newInstance());
+                    replaceFragment(fragment_thongbao.newInstance());
                 }
                 return true;
             }

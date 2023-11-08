@@ -16,6 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.quantri_banhang.DTO.CartOrderDTO;
+import com.example.quantri_banhang.DTO.FcmMessage;
+import com.example.quantri_banhang.Interface.FcmApiService;
 import com.example.quantri_banhang.Package_Bill.Adapter.Chitietdonhang_Adapter;
 import com.example.quantri_banhang.R;
 import com.example.quantri_banhang.actitvity.Category_Activity;
@@ -29,6 +31,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class Chitietdonhang_Activity extends AppCompatActivity {
     String TAG = "ChitietdonhangActivity";
     ArrayList<CartOrderDTO> list;
@@ -36,6 +45,7 @@ public class Chitietdonhang_Activity extends AppCompatActivity {
     ImageView id_back;
     ListView lvhoadon;
     String idbill_hoadon, id_userbill;
+    String   reciverUid ;
     int status;
 
     int upstatus;
@@ -56,11 +66,11 @@ public class Chitietdonhang_Activity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        
+
         Intent intent = getIntent();
         idbill_hoadon = intent.getStringExtra("id_bill");
         status = intent.getIntExtra("status", 1);
-        id_userbill = intent.getStringExtra("");
+        id_userbill = intent.getStringExtra("id_user");
         Log.d(TAG, "id_bill: " + status);
         list = new ArrayList<>();
         adapter = new Chitietdonhang_Adapter(Chitietdonhang_Activity.this, list);
@@ -72,6 +82,9 @@ public class Chitietdonhang_Activity extends AppCompatActivity {
         }else if (status == 4){
             btnhuydonhang.setVisibility(View.GONE);
         } else if (status == 1) {
+            String message ="Đơn hàng bạn đặt vừa được xác nhận";
+                sendNotification(id_userbill, message);
+
             upstatus = 2;
             btnhuydonhang.setText("Xác nhận đơn");
         } else if (status == 2) {
@@ -120,4 +133,66 @@ public class Chitietdonhang_Activity extends AppCompatActivity {
             }
         });
     }
+    public void sendFcmData(String fcmToken, String content) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://fcm.googleapis.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        FcmApiService apiService = retrofit.create(FcmApiService.class);
+
+        FcmMessage message = new FcmMessage();
+        message.setTo(fcmToken);
+
+        Map<String, String> data = new HashMap<>();
+        data.put("title", "Có Thông Báo Mới");
+        data.put("message", content);
+        Log.d("Chat", "sendFcmData: "+content);
+        message.setData(data);
+
+        Call<ResponseBody> call = apiService.sendFcmMessage(message);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+
+                    Log.d("ChatActivity", "Gửi thông báo FCM thành công");
+                } else {
+
+                    Log.e("ChatActivity", "Gửi thông báo FCM thất bại");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Xảy ra lỗi
+                Log.e("ChatActivity", "Lỗi khi gửi thông báo FCM: " + t.getMessage());
+            }
+        });
+    }
+
+    private void sendNotification(String recipientUID, String message) {
+        String notificationTitle = "Có Thông Báo Mới!";
+
+        DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("userTokens").child(recipientUID);
+        tokenRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String recipientToken = dataSnapshot.getValue(String.class);
+                if (recipientToken != null) {
+                    Map<String, String> dataMap = new HashMap<>();
+                    dataMap.put("title", notificationTitle);
+                    dataMap.put("message", message);
+
+                    sendFcmData(recipientToken, message);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("ChatActivity", "Lỗi khi lấy mã FCM của người nhận: " + databaseError.getMessage());
+            }
+        });
+    }
+
 }
