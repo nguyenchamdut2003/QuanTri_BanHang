@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-
-    >
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="5dp"
         android:layout_margin="8dp">
-
-
 
         <LinearLayout
             android:layout_width="100dp"
@@ -21,34 +17,24 @@
             android:layout_margin="8dp">
 
             <ImageView
-
                 android:id="@+id/imgItemsp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/fb"
                 />
-
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="2">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    >
-
+            android:layout_weight="1">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-               >
+                android:orientation="horizontal">
                 <TextView
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Tên sản phẩm:"
@@ -58,26 +44,20 @@
                     android:textStyle="bold"/>
                 <TextView
                     android:id="@+id/tvItemtensp"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:padding="8dp"
                     android:textColor="@color/black"
                     android:textSize="12sp"
                     android:textStyle="bold"/>
-
-
+                <TextView
+                    android:id="@+id/tv_menubam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/more_vert"
+                    />
             </LinearLayout>
-    <TextView
-        android:id="@+id/tv_menubam"
-        android:layout_gravity="right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/more_vert"
-        />
-
-        </LinearLayout>
-
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -98,16 +78,14 @@
                     android:padding="8dp"
                     android:textSize="12sp"
                     android:textStyle="bold"
-
                     />
-
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Thông tin:"
@@ -123,15 +101,13 @@
                     android:textColor="#000000"
                     android:textSize="12sp"
                     android:textStyle="bold"/>
-
-
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Số lượng:"
@@ -147,15 +123,13 @@
                     android:textColor="#000000"
                     android:textSize="12sp"
                     android:textStyle="bold"/>
-
-
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Loại:"
@@ -171,16 +145,7 @@
                     android:textColor="#000000"
                     android:textSize="12sp"
                     android:textStyle="bold"/>
-
-
-            </LinearLayout>
-
             </LinearLayout>
         </LinearLayout>
-
-
-
-
-
-
+    </LinearLayout>
 </androidx.cardview.widget.CardView>

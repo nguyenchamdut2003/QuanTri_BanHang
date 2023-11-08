@@ -55,6 +55,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -477,6 +478,21 @@ public class QLySanPhamActivity extends AppCompatActivity implements Adapter_Qly
         EditText ed_price = dialog.findViewById(R.id.ed_price_update);
         EditText ed_number = dialog.findViewById(R.id.ed_number_update);
         img_preview = dialog.findViewById(R.id.img_pro_update);
+
+        // Lấy dữ liệu từ DTO_QlySanPham
+        String id = dto_qlySanPham.getId();
+        String namePro = dto_qlySanPham.getName();
+        String des = dto_qlySanPham.getInformation();
+        String price = dto_qlySanPham.getPrice();
+        String imageUrl = dto_qlySanPham.getImage();
+        int number = dto_qlySanPham.getNumber();
+
+// Sử dụng setter để hiển thị dữ liệu trong EditText
+        ed_name.setText(namePro);
+        ed_des.setText(des);
+        ed_price.setText(price);
+        ed_number.setText(String.valueOf(number));
+        Picasso.get().load(imageUrl).into(img_preview);
 
         TextView btn_update = dialog.findViewById(R.id.dialog_btn_update);
         TextView btn_huy = dialog.findViewById(R.id.btn_huy);
