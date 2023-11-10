@@ -68,6 +68,12 @@ public class Category_Activity extends AppCompatActivity implements AdapterCateg
                 addcategory();
             }
         });
+        btnback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
     public void addcategory(){
         final Dialog dialog1 = new Dialog(this);

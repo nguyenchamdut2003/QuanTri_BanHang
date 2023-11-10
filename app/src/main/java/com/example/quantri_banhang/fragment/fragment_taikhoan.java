@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.example.quantri_banhang.DTO.BillDTO;
 import com.example.quantri_banhang.Package_Bill.Activity.Giaohang_Activity;
 import com.example.quantri_banhang.Package_Bill.Activity.Hoanthanhdon_Activity;
 import com.example.quantri_banhang.Package_Bill.Activity.Layhang_Activity;
@@ -31,16 +32,24 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class fragment_taikhoan extends Fragment {
     GoogleSignInClient googleSignInClient;
-    RelativeLayout rlxacnhandon, rllayhang, rldanggiao, rlhoanthanh;
+    RelativeLayout rlxacnhandon, rllayhang, rldanggiao;
     String TAG = "fragmenttaikhoan";
-    TextView tv_fullname;
+    TextView tv_fullname, tvsoluongbill1, tvsoluongbill2, tvsoluongbill3;
     private FirebaseAuth auth;
-    CardView carddscagoryte, carddonhuy;
+    CardView carddscagoryte, carddonhuy, carddonhoanthanh, cardviewbill1, cardviewbill2, cardviewbill3;
+    ArrayList<BillDTO> list1;
+    ArrayList<BillDTO> list2;
+    ArrayList<BillDTO> list3;
     public fragment_taikhoan() {
         // Required empty public constructor
     }
@@ -60,7 +69,14 @@ public class fragment_taikhoan extends Fragment {
         rlxacnhandon = viewok.findViewById(R.id.rl_xacnhandon);
         rllayhang = viewok.findViewById(R.id.rl_layhang);
         rldanggiao = viewok.findViewById(R.id.rl_danggiao);
-        rlhoanthanh = viewok.findViewById(R.id.rl_hoanthanh);
+        cardviewbill1 = viewok.findViewById(R.id.cardviewbill1);
+        tvsoluongbill1 = viewok.findViewById(R.id.tvsoluongbill1);
+        tvsoluongbill2 = viewok.findViewById(R.id.tvsoluongbill2);
+        tvsoluongbill3 = viewok.findViewById(R.id.tvsoluongbill3);
+        cardviewbill2 = viewok.findViewById(R.id.cardviewbill2);
+        cardviewbill3 = viewok.findViewById(R.id.cardviewbill3);
+
+        carddonhoanthanh = viewok.findViewById(R.id.card_donhoanthanh);
         rlxacnhandon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,7 +98,7 @@ public class fragment_taikhoan extends Fragment {
                 startActivity(intent);
             }
         });
-        rlhoanthanh.setOnClickListener(new View.OnClickListener() {
+        carddonhoanthanh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), Hoanthanhdon_Activity.class);
@@ -97,8 +113,63 @@ public class fragment_taikhoan extends Fragment {
                 startActivity(intent);
             }
         });
+
+        //hiển thị báo hiệu số đơn
+        list1 = new ArrayList<>();
+        list2 = new ArrayList<>();
+        list3 = new ArrayList<>();
+        getdata();
+
         return viewok;
     }
+
+    public void getdata(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRefId = database.getReference("BillProduct");
+        myRefId.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    BillDTO billDTO = dataSnapshot.getValue(BillDTO.class);
+                    if (billDTO.getStatus() == 1){
+                        list1.add(billDTO);
+                    }
+                    if (billDTO.getStatus() == 2){
+                        list2.add(billDTO);
+                    }
+                    if (billDTO.getStatus() == 3){
+                        list3.add(billDTO);
+                    }
+                }
+                if (list1.size() == 0){
+                    cardviewbill1.setVisibility(View.GONE);
+                }
+                else {
+                    cardviewbill1.setVisibility(View.VISIBLE);
+                    tvsoluongbill1.setText(""+list1.size());
+                }
+                if (list2.size() == 0){
+                    cardviewbill2.setVisibility(View.GONE);
+                }
+                else {
+                    cardviewbill2.setVisibility(View.VISIBLE);
+                    tvsoluongbill2.setText(""+list2.size());
+                }
+                if (list3.size() == 0){
+                    cardviewbill3.setVisibility(View.GONE);
+                }
+                else {
+                    cardviewbill3.setVisibility(View.VISIBLE);
+                    tvsoluongbill3.setText(""+list3.size());
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d(TAG, "err: " + error);
+            }
+        });
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
