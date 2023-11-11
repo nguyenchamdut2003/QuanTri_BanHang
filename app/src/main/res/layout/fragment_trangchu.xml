@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:orientation="horizontal"
-        android:background="#077A88"
+        android:background="#A0DAE1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent">
@@ -37,6 +37,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="8dp"
+        android:padding="20dp"
         android:gravity="center">
         <TextView
             android:layout_width="wrap_content"
@@ -86,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/xemchitiet"
-                android:textColor="#F30013"
+                android:textColor="#000000"
                 android:textSize="15sp"
                 android:layout_marginLeft="90dp"
                 android:textStyle="italic"

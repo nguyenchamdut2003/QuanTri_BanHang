@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.img_gg).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.id_linearGG).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loginWithGG();
@@ -169,14 +169,19 @@ public class LoginActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
                             FirebaseUser user = auth.getCurrentUser();
-                            HashMap<String, Object> map = new HashMap<>();
-                            map.put("id", user.getUid());
-                            map.put("fullname", user.getDisplayName());
-                            map.put("email",user.getEmail());
-                            map.put("role","Admin");
+                            DatabaseReference myRefId = database.getReference("Users/" + user.getUid() + "/id");
+                            myRefId.setValue(user.getUid());
+
+                            DatabaseReference myRefFullname = database.getReference("Users/" + user.getUid() + "/fullname");
+                            myRefFullname.setValue(user.getDisplayName());
+
+                            DatabaseReference myRefEmail = database.getReference("Users/" + user.getUid() + "/email");
+                            myRefEmail.setValue(user.getEmail());
+
+                            DatabaseReference myRefRole = database.getReference("Users/" + user.getUid() + "/role");
+                            myRefRole.setValue("Admin");
 
 
-                            database.getReference().child("Users").child(user.getUid()).setValue(map);
                             Toast.makeText(LoginActivity.this, "Login Email Success.", Toast.LENGTH_SHORT).show();
                             saveUserFCMToken();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
