@@ -543,7 +543,7 @@ public class QLySanPhamActivity extends AppCompatActivity implements Adapter_Qly
                     ed_number.setError("Số lượng phải là số!!");
                 }else{
                     int number = Integer.parseInt(ed_number.getText().toString().trim());
-                    DTO_QlySanPham sanPham = new DTO_QlySanPham(id,link_anh,namePro,price,des,nameCat,number);
+                    DTO_QlySanPham sanPham = new DTO_QlySanPham(id,imageUrl,namePro,price,des,nameCat,number);
 
                     myRef.child(id).setValue(sanPham, new DatabaseReference.CompletionListener() {
                         @Override
